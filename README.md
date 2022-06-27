@@ -4,7 +4,7 @@
 
 ## Version 1.3
 
-Web3E is a fully functional Web3 framework for Embedded devices running Arduino. Web3E now has methods which allow you to use TokenScript in your IoT solution for rapid deployment. Tested mainly on ESP32 and working on ESP8266. Also included is a rapid development DApp injector to convert your embedded server into a fully integrated Ethereum DApp. 
+Web3E is a fully functional Web3 framework for Embedded devices running Arduino. Web3E now has methods which allow you to use TokenScript in your IoT solution for rapid deployment. Tested mainly on ESP32 and working on ESP8266. Also included is a rapid development DApp injector to convert your embedded server into a fully integrated Ethereum DApp.
 
 Starting from a simple requirement - write a DApp capable of running on an ESP32 which can serve as a security door entry system. Some brave attempts can be found in scattered repos but ultimately even the best are just dapp veneers or have ingeneous and clunky hand-rolled communication systems like the Arduino wallet attempts.
 
@@ -13,29 +13,30 @@ It is possible that as Ethereum runs natively on embedded devices a new revoluti
 
 ## New Features
 
-- Simplified Node connection.
-- Add TCP Bridge.
-- improve device key init.
-- add August lock crypto interface sample.
-- TokenScript/API interface [TokenScript](https://tokenscript.org)
-- uint256 class added to correctly handle Ethereum types.
-- usability methods added for converting between doubles and Wei values.
-- usability methods added for displaying Wei values as doubles.
-- random number generation uses Mersenne Twister.
-- memory usage improved.
+-   Simplified Node connection.
+-   Add TCP Bridge.
+-   improve device key init.
+-   add August lock crypto interface sample.
+-   TokenScript/API interface [TokenScript](https://tokenscript.org)
+-   uint256 class added to correctly handle Ethereum types.
+-   usability methods added for converting between doubles and Wei values.
+-   usability methods added for displaying Wei values as doubles.
+-   random number generation uses Mersenne Twister.
+-   memory usage improved.
 
 ## Features
 
-- Web3E now has a streamlined [TokenScript](https://tokenscript.org) interface for smooth integration with AlphaWallet, and other TokenScript powered wallet.
-- Web3E has a Ready-to-Go DApp injection system that turns any device hosted site instantly into an Ethereum DApp with ECDSA crypto!
-- Cryptography has been overhauled to use a cut-down version of Trezor Wallet's heavily optimised and production proven library.
-- Transaction system is fully optimised and has been tested on ERC20 and ERC875 contracts.
-- Usability has been a priority.
+-   Web3E now has a streamlined [TokenScript](https://tokenscript.org) interface for smooth integration with AlphaWallet, and other TokenScript powered wallet.
+-   Web3E has a Ready-to-Go DApp injection system that turns any device hosted site instantly into an Ethereum DApp with ECDSA crypto!
+-   Cryptography has been overhauled to use a cut-down version of Trezor Wallet's heavily optimised and production proven library.
+-   Transaction system is fully optimised and has been tested on ERC20 and ERC875 contracts.
+-   Usability has been a priority.
+-   Implemented Meta Transactions according to [EIP712](https://eips.ethereum.org/EIPS/eip-712) for signing messages directly on Arduino and using a relay node to submit them to the blockchain without losing security.
 
 ## Installation
 
-- It is recommended to use [Platformio](https://platformio.org/install/) for best experience. Web3E is now part of the Platformio libraries so no need to clone the repo.
-- Using Web3E is a one step process:
+-   It is recommended to use [Platformio](https://platformio.org/install/) for best experience. Web3E is now part of the Platformio libraries so no need to clone the repo.
+-   Using Web3E is a one step process:
     1. Create a new project in Platformio and edit the platformio.ini so it looks similar to:
 
 ```
@@ -54,28 +55,26 @@ lib_deps =
 
 ## Example TokenScript flow
 
-- Two API end points are exposed on the embedded device, '/api/getChallenge' and 'api/checkSignature?sig=<sig>'
-- Device creates a challenge string, lets say 'Oranges 22853'.
-- Tokenscript enabled phone runs embedded JavaScript that does a 'fetch' on 'getChallenge', returning 'Oranges 22853'.
-- User is asked to sign this message using Ethereum SignPersonalMessage, with the same key that owns an entry token.
-- Signature is sent back to embedded device using 'fetch' on 'api/checkSignature?sig=<signature of 'Oranges 22853'>'.
-- Device ECRecover's an Ethereum Address from the signature using the current challenge.
-- If address from ECRecover holds a token then open the door.
-- Report pass/fail to callee.
+-   Two API end points are exposed on the embedded device, '/api/getChallenge' and 'api/checkSignature?sig=<sig>'
+-   Device creates a challenge string, lets say 'Oranges 22853'.
+-   Tokenscript enabled phone runs embedded JavaScript that does a 'fetch' on 'getChallenge', returning 'Oranges 22853'.
+-   User is asked to sign this message using Ethereum SignPersonalMessage, with the same key that owns an entry token.
+-   Signature is sent back to embedded device using 'fetch' on 'api/checkSignature?sig=<signature of 'Oranges 22853'>'.
+-   Device ECRecover's an Ethereum Address from the signature using the current challenge.
+-   If address from ECRecover holds a token then open the door.
+-   Report pass/fail to callee.
 
 The advantage of using TokenScript rather than a dapp is evident from looking at the code example. You will have a very nice user interface defined with html/css with the calling code written in small JavaScript functions. The user would quickly find the entry token in their wallet.
 
 ## New in Version 1.3 - easy node setup
 
-Web3E now has a series of API key free node endpoints for many EVMs. The full list can be found in ```src/chainIds.h```.
+Web3E now has a series of API key free node endpoints for many EVMs. The full list can be found in `src/chainIds.h`.
 Supply one of these to the Web3 object in your main sketch to start connecting.
 eg:
 
-```Web3 *web3 = new Web3(RINKEBY_ID);```
-	
-```Web3 *web3 = new Web3(IOTEX_ID);```
-	
-```Web3 *web3 = new Web3(MUMBAI_TEST_ID);```
+`Web3 *web3 = new Web3(RINKEBY_ID);`
+`Web3 *web3 = new Web3(IOTEX_ID);`
+`Web3 *web3 = new Web3(MUMBAI_TEST_ID);`
 
 Note, if you have an Infura API key and wish to use Infura where possible, edit Web3.h like this:
 
@@ -88,58 +87,63 @@ Web3E will adjust the node endpoint to use Infura for all Infura supported netwo
 
 ## Example Web3E DApp flow
 
-- Device creates a challenge string, lets say 'Oranges 22853'. 
-- Sign button containing a JavaScript Web3 call will instruct the wallet browser to ask the user to use their private key to sign 'Oranges 22853'. 
-- After user signs, the signature and the user's address are passed back into the code running on the firmware.
-- Web3E can perform ECRecover on the signature and the challenge string it created.
-- The device code compares the recovered address with the address from the user. If they match then we have verified the user holds the private key for that address.
-- Web3E can now check for specific permission tokens held by the user address. If the tokens are present the user has permission to operate whatever is connected to the device, could be a security door, safe, the office printer, a shared bitcoin hardware wallet etc.
-- All operations are offchain ie gasless, but using on-chain attestations which an owner can issue at will.
+-   Device creates a challenge string, lets say 'Oranges 22853'.
+-   Sign button containing a JavaScript Web3 call will instruct the wallet browser to ask the user to use their private key to sign 'Oranges 22853'.
+-   After user signs, the signature and the user's address are passed back into the code running on the firmware.
+-   Web3E can perform ECRecover on the signature and the challenge string it created.
+-   The device code compares the recovered address with the address from the user. If they match then we have verified the user holds the private key for that address.
+-   Web3E can now check for specific permission tokens held by the user address. If the tokens are present the user has permission to operate whatever is connected to the device, could be a security door, safe, the office printer, a shared bitcoin hardware wallet etc.
+-   All operations are offchain ie gasless, but using on-chain attestations which an owner can issue at will.
 
 ## AlphaWallet Security Door
 
 https://github.com/alpha-wallet/Web3E-Application
 
 Full source code for the [system active at the AlphaWallet office](https://www.youtube.com/watch?v=D_pMOMxXrYY). To get it working you need:
-- [Platformio](https://platformio.org/)
-- [AlphaWallet](https://www.alphawallet.com)
-- [Testnet Eth Kovan](https://faucets.chain.link/kovan). Visit this site on the DApp browser, although it's locked down to only use MetaMask.
-- [Testnet Eth Goerli](https://fauceth.komputing.org/?chain=5). Visit this site on your DApp browser - you'll need an ENS name to retrieve.
-Choose NonFungible token standard ERC721 or ERC875. Note the samples are written for ERC875 so you may need to adapt them for the ERC721 balance check.
-- [Mint some ERC721 tokens](https://mintable.app/create) Visit here on your DApp browser.
-- [Mint some ERC875 tokens](https://tf.alphawallet.com) Visit here on your DApp browser.
-- Take a note of the contract address. Copy/paste contract address into source code inside the 'STORMBIRD_CONTRACT' define.
-- Build and deploy the sample to your Arduino framework device.
-- Use the transfer or MagicLink on AlphaWallet to give out the tokens.
+
+-   [Platformio](https://platformio.org/)
+-   [AlphaWallet](https://www.alphawallet.com)
+-   [Testnet Eth Kovan](https://faucets.chain.link/kovan). Visit this site on the DApp browser, although it's locked down to only use MetaMask.
+-   [Testnet Eth Goerli](https://fauceth.komputing.org/?chain=5). Visit this site on your DApp browser - you'll need an ENS name to retrieve.
+    Choose NonFungible token standard ERC721 or ERC875. Note the samples are written for ERC875 so you may need to adapt them for the ERC721 balance check.
+-   [Mint some ERC721 tokens](https://mintable.app/create) Visit here on your DApp browser.
+-   [Mint some ERC875 tokens](https://tf.alphawallet.com) Visit here on your DApp browser.
+-   Take a note of the contract address. Copy/paste contract address into source code inside the 'STORMBIRD_CONTRACT' define.
+-   Build and deploy the sample to your Arduino framework device.
+-   Use the transfer or MagicLink on AlphaWallet to give out the tokens.
 
 ## Included in the package are seven samples
 
-- Simple DApp. Shows the power of the library to create a DApp server truly embedded in the device. The on-board cryptography engine can fully interact with user input. Signing, recovery/verification takes milliseconds on ESP32.
-- Query Wallet balances, Token balances and for the first time Non-Fungible-Token (NFT) balances.
-- Push transactions, showing token transfer of ERC20 and ERC875 tokens.
-- Send Eth, showing how to send native eth.
-- Wallet Bridge 1: Introduction to simple TokenScript connection to wallet.
-- Wallet Bridge 2: Use simple authentication to check pre-defined addresses.
-- Wallet Bridge 3: Use Ethereum Tokens as security attestations to interct with your IoT directly via the wallet.
+-   Simple DApp. Shows the power of the library to create a DApp server truly embedded in the device. The on-board cryptography engine can fully interact with user input. Signing, recovery/verification takes milliseconds on ESP32.
+-   Query Wallet balances, Token balances and for the first time Non-Fungible-Token (NFT) balances.
+-   Push transactions, showing token transfer of ERC20 and ERC875 tokens.
+-   Send Eth, showing how to send native eth.
+-   Wallet Bridge 1: Introduction to simple TokenScript connection to wallet.
+-   Wallet Bridge 2: Use simple authentication to check pre-defined addresses.
+-   Wallet Bridge 3: Use Ethereum Tokens as security attestations to interct with your IoT directly via the wallet.
 
 The push transaction sample requires a little work to get running. You have to have an Ethereum wallet, some testnet ETH, the private key for that testnet eth, and then create some ERC20 and ERC875 tokens in the account.
 
 ## Usage
+
 See Wallet Bridge 1, 2 and 3 examples for complete source
 
 ## Standard: Using ScriptProxy Bridge
+
 ### This style of connection will work in almost every situation, from inside or outside of the WiFi connection
-In this usage pattern, your IoT device will connect to a proxy server which provides a bridge to the TokenScript running on your wallet. 
+
+In this usage pattern, your IoT device will connect to a proxy server which provides a bridge to the TokenScript running on your wallet.
 The source code for the proxy server can be found here: [Script Proxy](https://github.com/AlphaWallet/Web3E-Application/tree/master/ScriptProxy)
 
-- Set up API routes
+-   Set up API routes
+
 ```
     const char *apiRoute = "api/";
-    enum APIRoutes {   
-        api_getChallenge, 
-        api_checkSignature, 
+    enum APIRoutes {
+        api_getChallenge,
+        api_checkSignature,
         api_End };
-					
+
     s_apiRoutes["getChallenge"] = api_getChallenge;
     s_apiRoutes["checkSignature"] = api_checkSignature;
     s_apiRoutes["end"] = api_End;
@@ -154,6 +158,7 @@ KeyID *keyID;
 ```
 
 Setup your Web node
+
 ```
 web3 = new Web3(MAINNET_ID);
 ```
@@ -186,7 +191,7 @@ void handleAPI(APIReturn *apiReturn, UdpBridge *udpBridge, int methodId)
 	case api_checkSignature:
 		{
 			//EC-Recover address from signature and challenge
-			string address = Crypto::ECRecoverFromPersonalMessage(&apiReturn->params["sig"], &currentChallenge);  
+			string address = Crypto::ECRecoverFromPersonalMessage(&apiReturn->params["sig"], &currentChallenge);
 			//Check if this address has our entry token
 			boolean hasToken = QueryBalance(&address);
 			updateChallenge(); //generate a new challenge after each check
@@ -200,19 +205,23 @@ void handleAPI(APIReturn *apiReturn, UdpBridge *udpBridge, int methodId)
 				udpBridge->sendResponse("fail: doesn't have token", methodId);
 			}
 		}
-                break;	
+                break;
 ```
 
-
 ## Advanced: Direct TCP connection
+
 ### Use this if you have admin control of your WiFi Router, as you need to set up port forwarding to access the unit from outside your WiFi
+
 In this usage pattern, the TokenScript running on the wallet will connect directly to the IoT device. Notice that this means your IoT is directly accessible to the internet, which may be susceptible to exploit.
 
-- Declare the TCP server in globals:
+-   Declare the TCP server in globals:
+
 ```
 WiFiServer server(8082);
 ```
-- Ensure your Device is locked to a fixed IP Address for port forwarding (adjust local IP address as required):
+
+-   Ensure your Device is locked to a fixed IP Address for port forwarding (adjust local IP address as required):
+
 ```
 IPAddress ipStat(192, 168, 1, 100);
 IPAddress gateway(192, 168, 1, 1);
@@ -221,20 +230,22 @@ IPAddress dns(192, 168, 1, 1);
 WiFi.config(ipStat, gateway, subnet, dns, dns);
 ```
 
+-   Set up API routes
 
-- Set up API routes
 ```
     const char *apiRoute = "api/";
-    enum APIRoutes {   
-        api_getChallenge, 
-        api_checkSignature, 
+    enum APIRoutes {
+        api_getChallenge,
+        api_checkSignature,
         api_End };
-					
+
     s_apiRoutes["getChallenge"] = api_getChallenge;
     s_apiRoutes["checkSignature"] = api_checkSignature;
     s_apiRoutes["end"] = api_End;
 ```
-- Listen for API call:
+
+-   Listen for API call:
+
 ```
     WiFiClient c = server.available(); // Listen for incoming clients
     ScriptClient *client = (ScriptClient*) &c;
@@ -245,7 +256,9 @@ WiFi.config(ipStat, gateway, subnet, dns, dns);
         client->checkClientAPI(apiRoute, &handleAPI); //method handles connection close etc.
     }
 ```
-- Handle API return:
+
+-   Handle API return:
+
 ```
 void handleAPI(APIReturn *apiReturn, ScriptClient *client)
 {
@@ -257,7 +270,7 @@ void handleAPI(APIReturn *apiReturn, ScriptClient *client)
         case api_checkSignature:
             {
 				//EC-Recover address from signature and challenge
-                string address = Crypto::ECRecoverFromPersonalMessage(&apiReturn->params["sig"], &currentChallenge);  
+                string address = Crypto::ECRecoverFromPersonalMessage(&apiReturn->params["sig"], &currentChallenge);
 				//Check if this address has our entry token
                 boolean hasToken = QueryBalance(&address);
                 updateChallenge(); //generate a new challenge after each check
@@ -293,12 +306,14 @@ string result = contract.SendTransaction(nonceVal, gasPriceVal, gasLimitVal, &to
 ```
 
 ## Query ETH balance:
+
 ```
 uint256_t balance = web3->EthGetBalance(&address); //obtain balance in Wei
 string balanceStr = Util::ConvertWeiToEthString(&balance, 18); //get string balance as Eth (18 decimals)
 ```
 
 ## Query ERC20 Balance:
+
 ```
 string address = string("0x007bee82bdd9e866b2bd114780a47f2261c684e3");
 Contract contract(web3, "0x20fe562d797a42dcb3399062ae9546cd06f63280"); //contract is on Ropsten
@@ -317,6 +332,7 @@ string balanceStr = Util::ConvertWeiToEthString(&baseBalance, decimals); //conve
 ```
 
 ## Send ERC20 Token:
+
 ```
 string contractAddr = "0x20fe562d797a42dcb3399062ae9546cd06f63280";
 Contract contract(web3, contractAddr.c_str());
@@ -353,22 +369,48 @@ result = contract.SendTransaction(nonceVal, gasPriceVal, gasLimitVal, &contractA
 string transactionHash = web3->getString(&result);
 ```
 
+## Send Meta Transactions
+
+```
+Web3 *web3 = new Web3(chain);
+Crypto *crypto = new Crypto(web3);
+string url = ""; // Url of the server that handles the requests and sends them to the blockchain. Check https://docs.openzeppelin.com/defender/autotasks
+cJSON *main_json = cJSON_Parse(metaTxTypedData.c_str()); // JSON in the format specified on EIP712 standard
+cJSON *types = cJSON_GetObjectItemCaseSensitive(main_json, "types");
+cJSON *primaryType = cJSON_GetObjectItemCaseSensitive(main_json, "primaryType");
+cJSON *domain = cJSON_GetObjectItemCaseSensitive(main_json, "domain");
+cJSON *message = cJSON_GetObjectItemCaseSensitive(main_json, "message");
+
+uint8_t messageHash[ETHERS_KECCAK256_LENGTH];
+uint8_t signature[ETHERS_SIGNATURE_LENGTH];
+
+EIP712::EIP712Hash("ForwardRequest", message, types, domain, messageHash);
+crypto->Sign(messageHash, signature);
+string request = "{\"signature\":\"" + Util::ConvertBytesToHex(signature, ETHERS_SIGNATURE_LENGTH) + "\",\"request\":" + request + "}"
+
+http.begin(url);
+http.addHeader("Content-Type", "application/json");
+int httpResponseCode = http.POST(request.c_str());
+```
+
 Originally forked https://github.com/kopanitsa/web3-arduino but with almost a complete re-write it is a new framework entirely.
 
 Libraries used:
-- Web3 Arduino https://github.com/kopanitsa/web3-arduino - skeleton of framework.
-- Trezor Crypto https://github.com/trezor/trezor-crypto - ECDSA sign, recover, verify, keccak256.
-- cJSON https://github.com/DaveGamble/cJSON
-- uint256 https://github.com/calccrypto/uint256_t - Lightweight uint256 implementation perfect for embedded devices.
-- Mersenne Twister https://github.com/MersenneTwister-Lab/TinyMT.git - For the most optimal random number generation for embedded.
+
+-   Web3 Arduino https://github.com/kopanitsa/web3-arduino - skeleton of framework.
+-   Trezor Crypto https://github.com/trezor/trezor-crypto - ECDSA sign, recover, verify, keccak256.
+-   cJSON https://github.com/DaveGamble/cJSON
+-   uint256 https://github.com/calccrypto/uint256_t - Lightweight uint256 implementation perfect for embedded devices.
+-   Mersenne Twister https://github.com/MersenneTwister-Lab/TinyMT.git - For the most optimal random number generation for embedded.
 
 Coming soon:
 
-- Security door using NFT access (currently live at AlphaWallet office!).
-- ERC1155 balance enquiry.
-- Use Templates in library code for more flexible development.
+-   Security door using NFT access (currently live at AlphaWallet office!).
+-   ERC1155 balance enquiry.
+-   Use Templates in library code for more flexible development.
 
 # Donations
+
 If you support the cause, we could certainly use donations to help fund development:
 
 0xbc8dAfeacA658Ae0857C80D8Aa6dE4D487577c63
