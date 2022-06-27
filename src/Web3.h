@@ -1,6 +1,6 @@
 // Web3E main header
 //
-// By James Brown Githubs: @JamesSmartCell @AlphaWallet 
+// By James Brown Githubs: @JamesSmartCell @AlphaWallet
 // Twitters: @TallyDigital @AlphaWallet
 //
 // Based on Web3 Arduino by Okada, Takahiro.
@@ -11,11 +11,11 @@
 #define ARDUINO_WEB3_WEB3_H
 
 typedef unsigned char BYTE;
-#define ETHERS_PRIVATEKEY_LENGTH       32
-#define ETHERS_PUBLICKEY_LENGTH        64
-#define ETHERS_ADDRESS_LENGTH          20
-#define ETHERS_KECCAK256_LENGTH        32
-#define ETHERS_SIGNATURE_LENGTH        65
+#define ETHERS_PRIVATEKEY_LENGTH 32
+#define ETHERS_PUBLICKEY_LENGTH 64
+#define ETHERS_ADDRESS_LENGTH 20
+#define ETHERS_KECCAK256_LENGTH 32
+#define ETHERS_SIGNATURE_LENGTH 65
 
 //#define USING_INFURA 1
 //#define INFURA_KEY "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"  //<--- Your Infura key here, if you use Infura
@@ -46,11 +46,14 @@ enum ConnectionStage
     confirmed
 };
 
-class Web3 {
+class Web3
+{
 public:
     Web3(long long chainId);
+    Web3(long long networkId, const char *host, const char *path);
+    Web3(long long networkId, const char *host, const char *path, const unsigned short port);
     string Web3ClientVersion();
-    string Web3Sha3(const string* data);
+    string Web3Sha3(const string *data);
     int NetVersion();
     bool NetListening();
     int NetPeerCount();
@@ -59,37 +62,37 @@ public:
     bool EthMining();
     double EthHashrate();
     long long int EthGasPrice();
-    void EthAccounts(char** array, int size);
+    void EthAccounts(char **array, int size);
     int EthBlockNumber();
-    uint256_t EthGetBalance(const string* address);
-    int EthGetTransactionCount(const string* address);
-    string EthViewCall(const string* data, const char* to);
+    uint256_t EthGetBalance(const string *address);
+    int EthGetTransactionCount(const string *address);
+    string EthViewCall(const string *data, const char *to);
 
-    string EthCall(const string* from, const char* to, long gas, long gasPrice, const string* value, const string* data);
-    string EthSendSignedTransaction(const string* data, const uint32_t dataLen);
+    string EthCall(const string *from, const char *to, long gas, long gasPrice, const string *value, const string *data);
+    string EthSendSignedTransaction(const string *data, const uint32_t dataLen);
 
-    long long int getLongLong(const string* json);
-    string getString(const string* json);
-    int getInt(const string* json);
-    uint256_t getUint256(const string* json);
+    long long int getLongLong(const string *json);
+    string getString(const string *json);
+    int getInt(const string *json);
+    uint256_t getUint256(const string *json);
 
 private:
-    string exec(const string* data);
-    string generateJson(const string* method, const string* params);
+    string exec(const string *data);
+    string generateJson(const string *method, const string *params);
     void selectHost();
     void setupCert();
-    
-    long getLong(const string* json);
-    double getDouble(const string* json);
-    bool getBool(const string* json);
+
+    long getLong(const string *json);
+    double getDouble(const string *json);
+    bool getBool(const string *json);
 
 private:
     WiFiClientSecure *client;
     BYTE *mem;
-    const char* host;
-    const char* path;
+    const char *host;
+    const char *path;
     unsigned short port;
     long long chainId;
 };
 
-#endif //ARDUINO_WEB3_WEB3_H
+#endif // ARDUINO_WEB3_WEB3_H

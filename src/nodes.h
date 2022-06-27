@@ -24,7 +24,7 @@
 #define GOERLI_RPC_URL "goerli-light.eth.linkpool.io"
 #define MUMBAI_RPC_URL "rpc-mumbai.maticvigil.com"
 #define OPTIMISM_RPC_URL "mainnet.optimism.io"
-#define ARBITRUM_TEST_RPC_URL "rinkeby.arbitrum.io/rpc"
+#define ARBITRUM_TEST_RPC_URL "arb1.arbitrum.io/rpc"
 #define KOVAN_RPC_URL "kovan.poa.network"
 #define OPTIMISM_TESTRPC_URL "kovan.optimism.io"
 #define PALM_RPC_URL "palm-mainnet.infura.io/v3/3a961d6501e54add9a41aa53f15de99b"
@@ -51,7 +51,7 @@
 #define KLAYTN_RPC "public-node-api.klaytnapi.com/v1/cypress"
 #define KLAYTN_BAOBAB_RPC "api.baobab.klaytn.net:8651"
 
-const char* getNode(long long chainId)
+const char *getNode(long long chainId)
 {
     switch (chainId)
     {
@@ -67,6 +67,10 @@ const char* getNode(long long chainId)
         return SOKOL_RPC_URL;
     case RINKEBY_ID:
         return RINKEBY_RPC_URL;
+    case ARBITRUM_MAIN_ID:
+        return ARBITRUM_RPC_URL;
+    case ARBITRUM_TEST_ID:
+        return ARBITRUM_TEST_RPC_URL;
     case XDAI_ID:
         return XDAI_RPC_URL;
     case GOERLI_ID:

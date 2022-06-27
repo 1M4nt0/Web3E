@@ -1,6 +1,6 @@
 // Web3E main header
 //
-// By James Brown Githubs: @JamesSmartCell @AlphaWallet 
+// By James Brown Githubs: @JamesSmartCell @AlphaWallet
 // Twitters: @TallyDigital @AlphaWallet
 //
 // Based on Web3 Arduino by Okada, Takahiro.
@@ -15,13 +15,33 @@
 #include <sstream>
 #include "nodes.h"
 
-Web3::Web3(long long networkId) {
+Web3::Web3(long long networkId)
+{
     mem = new BYTE[sizeof(WiFiClientSecure)];
     chainId = networkId;
     selectHost();
 }
 
-string Web3::Web3ClientVersion() {
+Web3::Web3(long long networkId, const char *host, const char *path)
+{
+    mem = new BYTE[sizeof(WiFiClientSecure)];
+    chainId = networkId;
+    this->host = host;
+    this->path = path;
+    this->port = 443;
+}
+
+Web3::Web3(long long networkId, const char *host, const char *path, const unsigned short port)
+{
+    mem = new BYTE[sizeof(WiFiClientSecure)];
+    chainId = networkId;
+    this->host = host;
+    this->path = path;
+    this->port = port;
+}
+
+string Web3::Web3ClientVersion()
+{
     string m = "web3_clientVersion";
     string p = "[]";
     string input = generateJson(&m, &p);
@@ -29,7 +49,8 @@ string Web3::Web3ClientVersion() {
     return getString(&output);
 }
 
-string Web3::Web3Sha3(const string* data) {
+string Web3::Web3Sha3(const string *data)
+{
     string m = "web3_sha3";
     string p = "[\"" + *data + "\"]";
     string input = generateJson(&m, &p);
@@ -37,7 +58,8 @@ string Web3::Web3Sha3(const string* data) {
     return getString(&output);
 }
 
-int Web3::NetVersion() {
+int Web3::NetVersion()
+{
     string m = "net_version";
     string p = "[]";
     string input = generateJson(&m, &p);
@@ -45,7 +67,8 @@ int Web3::NetVersion() {
     return getInt(&output);
 }
 
-bool Web3::NetListening() {
+bool Web3::NetListening()
+{
     string m = "net_listening";
     string p = "[]";
     string input = generateJson(&m, &p);
@@ -53,7 +76,8 @@ bool Web3::NetListening() {
     return getBool(&output);
 }
 
-int Web3::NetPeerCount() {
+int Web3::NetPeerCount()
+{
     string m = "net_peerCount";
     string p = "[]";
     string input = generateJson(&m, &p);
@@ -61,7 +85,8 @@ int Web3::NetPeerCount() {
     return getInt(&output);
 }
 
-double Web3::EthProtocolVersion() {
+double Web3::EthProtocolVersion()
+{
     string m = "eth_protocolVersion";
     string p = "[]";
     string input = generateJson(&m, &p);
@@ -69,7 +94,8 @@ double Web3::EthProtocolVersion() {
     return getDouble(&output);
 }
 
-bool Web3::EthSyncing() {
+bool Web3::EthSyncing()
+{
     string m = "eth_syncing";
     string p = "[]";
     string input = generateJson(&m, &p);
@@ -79,16 +105,20 @@ bool Web3::EthSyncing() {
     root = cJSON_Parse(result.c_str());
     value = cJSON_GetObjectItem(root, "result");
     bool ret;
-    if (cJSON_IsBool(value)) {
+    if (cJSON_IsBool(value))
+    {
         ret = false;
-    } else{
+    }
+    else
+    {
         ret = true;
     }
     cJSON_free(root);
     return ret;
 }
 
-bool Web3::EthMining() {
+bool Web3::EthMining()
+{
     string m = "eth_mining";
     string p = "[]";
     string input = generateJson(&m, &p);
@@ -96,7 +126,8 @@ bool Web3::EthMining() {
     return getBool(&output);
 }
 
-double Web3::EthHashrate() {
+double Web3::EthHashrate()
+{
     string m = "eth_hashrate";
     string p = "[]";
     string input = generateJson(&m, &p);
@@ -104,7 +135,8 @@ double Web3::EthHashrate() {
     return getDouble(&output);
 }
 
-long long int Web3::EthGasPrice() {
+long long int Web3::EthGasPrice()
+{
     string m = "eth_gasPrice";
     string p = "[]";
     string input = generateJson(&m, &p);
@@ -112,11 +144,13 @@ long long int Web3::EthGasPrice() {
     return getLongLong(&output);
 }
 
-void Web3::EthAccounts(char** array, int size) {
-     // TODO
+void Web3::EthAccounts(char **array, int size)
+{
+    // TODO
 }
 
-int Web3::EthBlockNumber() {
+int Web3::EthBlockNumber()
+{
     string m = "eth_blockNumber";
     string p = "[]";
     string input = generateJson(&m, &p);
@@ -124,7 +158,8 @@ int Web3::EthBlockNumber() {
     return getInt(&output);
 }
 
-uint256_t Web3::EthGetBalance(const string* address) {
+uint256_t Web3::EthGetBalance(const string *address)
+{
     string m = "eth_getBalance";
     string p = "[\"" + *address + "\",\"latest\"]";
     string input = generateJson(&m, &p);
@@ -132,10 +167,10 @@ uint256_t Web3::EthGetBalance(const string* address) {
     return getUint256(&output);
 }
 
-string Web3::EthViewCall(const string* data, const char* to)
+string Web3::EthViewCall(const string *data, const char *to)
 {
     string m = "eth_call";
-    string p = "[{\"data\":\"";// + *data;
+    string p = "[{\"data\":\""; // + *data;
     p += data->c_str();
     p += "\",\"to\":\"";
     p += to;
@@ -144,25 +179,27 @@ string Web3::EthViewCall(const string* data, const char* to)
     return exec(&input);
 }
 
-int Web3::EthGetTransactionCount(const string* address) {
+int Web3::EthGetTransactionCount(const string *address)
+{
     string m = "eth_getTransactionCount";
-    string p = "[\"" + *address + "\",\"pending\"]"; //in case we need to push several transactions in a row
+    string p = "[\"" + *address + "\",\"pending\"]"; // in case we need to push several transactions in a row
     string input = generateJson(&m, &p);
     string output = exec(&input);
     return getInt(&output);
 }
 
-string Web3::EthCall(const string* from, const char* to, long gas, long gasPrice,
-                     const string* value, const string* data) {
+string Web3::EthCall(const string *from, const char *to, long gas, long gasPrice,
+                     const string *value, const string *data)
+{
     // TODO use gas, gasprice and value
     string m = "eth_call";
-    string p = "[{\"from\":\"" + *from + "\",\"to\":\""
-               + *to + "\",\"data\":\"" + *data + "\"}, \"latest\"]";
+    string p = "[{\"from\":\"" + *from + "\",\"to\":\"" + *to + "\",\"data\":\"" + *data + "\"}, \"latest\"]";
     string input = generateJson(&m, &p);
     return exec(&input);
 }
 
-string Web3::EthSendSignedTransaction(const string* data, const uint32_t dataLen) {
+string Web3::EthSendSignedTransaction(const string *data, const uint32_t dataLen)
+{
     string m = "eth_sendRawTransaction";
     string p = "[\"" + *data + "\"]";
     string input = generateJson(&m, &p);
@@ -175,22 +212,25 @@ string Web3::EthSendSignedTransaction(const string* data, const uint32_t dataLen
 // -------------------------------
 // Private
 
-string Web3::generateJson(const string* method, const string* params) {
+string Web3::generateJson(const string *method, const string *params)
+{
     return "{\"jsonrpc\":\"2.0\",\"method\":\"" + *method + "\",\"params\":" + *params + ",\"id\":0}";
 }
 
-string Web3::exec(const string* data) {
+string Web3::exec(const string *data)
+{
     string result;
 
     client = new (mem) WiFiClientSecure();
     setupCert();
 
     int connected = client->connect(host, port);
-    if (!connected) {
+    if (!connected)
+    {
         Serial.print("Unable to connect to Host: ");
         Serial.println(host);
         delay(100);
-        //trigger a reset of the device
+        // trigger a reset of the device
         ESP.restart();
         return "";
     }
@@ -215,14 +255,16 @@ string Web3::exec(const string* data) {
     while (client->connected())
     {
         String line = client->readStringUntil('\n');
-        if (line == "\r") {
+        if (line == "\r")
+        {
             break;
         }
     }
 
     // if there are incoming bytes available
     // from the server, read them and print them:
-    while (client->available()) {
+    while (client->available())
+    {
         char c = client->read();
         result += c;
     }
@@ -234,72 +276,84 @@ string Web3::exec(const string* data) {
     return result;
 }
 
-int Web3::getInt(const string* json) {
+int Web3::getInt(const string *json)
+{
     int ret = -1;
     cJSON *root, *value;
     root = cJSON_Parse(json->c_str());
     value = cJSON_GetObjectItem(root, "result");
-    if (cJSON_IsString(value)) {
+    if (cJSON_IsString(value))
+    {
         ret = strtol(value->valuestring, nullptr, 16);
     }
     cJSON_free(root);
     return ret;
 }
 
-long Web3::getLong(const string* json) {
+long Web3::getLong(const string *json)
+{
     long ret = -1;
     cJSON *root, *value;
     root = cJSON_Parse(json->c_str());
     value = cJSON_GetObjectItem(root, "result");
-    if (cJSON_IsString(value)) {
+    if (cJSON_IsString(value))
+    {
         ret = strtol(value->valuestring, nullptr, 16);
     }
     cJSON_free(root);
     return ret;
 }
 
-long long int Web3::getLongLong(const string* json) {
+long long int Web3::getLongLong(const string *json)
+{
     long long int ret = -1;
     cJSON *root, *value;
     root = cJSON_Parse(json->c_str());
     value = cJSON_GetObjectItem(root, "result");
-    if (cJSON_IsString(value)) {
+    if (cJSON_IsString(value))
+    {
         ret = strtoll(value->valuestring, nullptr, 16);
     }
     cJSON_free(root);
     return ret;
 }
 
-uint256_t Web3::getUint256(const string* json) {
+uint256_t Web3::getUint256(const string *json)
+{
     uint256_t ret = 0;
     cJSON *root, *value;
     root = cJSON_Parse(json->c_str());
     value = cJSON_GetObjectItem(root, "result");
-    if (cJSON_IsString(value)) {
+    if (cJSON_IsString(value))
+    {
         ret = uint256_t(value->valuestring);
     }
     cJSON_free(root);
     return ret;
 }
 
-double Web3::getDouble(const string* json) {
+double Web3::getDouble(const string *json)
+{
     double ret = -1;
     cJSON *root, *value;
     root = cJSON_Parse(json->c_str());
     value = cJSON_GetObjectItem(root, "result");
-    if (cJSON_IsString(value)) {
+    if (cJSON_IsString(value))
+    {
         ret = strtof(value->valuestring, nullptr);
     }
     cJSON_free(root);
     return ret;
 }
 
-bool Web3::getBool(const string* json) {
+bool Web3::getBool(const string *json)
+{
     bool ret = false;
     cJSON *root, *value;
     root = cJSON_Parse(json->c_str());
     value = cJSON_GetObjectItem(root, "result");
-    if (cJSON_IsBool(value)) {
+    if (cJSON_IsBool(value))
+    {
         ret = (bool)value->valueint;
     }
     cJSON_free(root);
@@ -325,10 +379,10 @@ string Web3::getString(const string *json)
 
 /**
  * @brief Fetch TLS certificate for the node
- * 
+ *
  * TODO: Add remaining certificates as required
- * 
- * @return const char* 
+ *
+ * @return const char*
  */
 void Web3::setupCert()
 {
@@ -362,7 +416,7 @@ void Web3::selectHost()
     int ppos = node.find(":");
     if (ppos > 0)
     {
-        port = stoi(node.substr(ppos+1));
+        port = stoi(node.substr(ppos + 1));
         node = node.substr(0, ppos);
     }
     else
