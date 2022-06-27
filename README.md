@@ -11,18 +11,9 @@ Starting from a simple requirement - write a DApp capable of running on an ESP32
 What is required is a method to write simple, fully embedded DApps which give you a zero infrastucture and total security solution.
 It is possible that as Ethereum runs natively on embedded devices a new revolution in the blockchain saga will begin. Now you have the ability to write a fully embedded DApp that gives you the seurity and flexibility of Ethereum in an embedded device.
 
-## New Features
+## Latest Feature
 
--   Simplified Node connection.
--   Add TCP Bridge.
--   improve device key init.
--   add August lock crypto interface sample.
--   TokenScript/API interface [TokenScript](https://tokenscript.org)
--   uint256 class added to correctly handle Ethereum types.
--   usability methods added for converting between doubles and Wei values.
--   usability methods added for displaying Wei values as doubles.
--   random number generation uses Mersenne Twister.
--   memory usage improved.
+-   Support for Meta Transactions according to [EIP712](https://eips.ethereum.org/EIPS/eip-712) standard for signing messages directly on Arduino and using a relay node to submit them to the blockchain without losing security.
 
 ## Features
 
@@ -31,7 +22,7 @@ It is possible that as Ethereum runs natively on embedded devices a new revoluti
 -   Cryptography has been overhauled to use a cut-down version of Trezor Wallet's heavily optimised and production proven library.
 -   Transaction system is fully optimised and has been tested on ERC20 and ERC875 contracts.
 -   Usability has been a priority.
--   Implemented Meta Transactions according to [EIP712](https://eips.ethereum.org/EIPS/eip-712) for signing messages directly on Arduino and using a relay node to submit them to the blockchain without losing security.
+-   Meta Transactions
 
 ## Installation
 
